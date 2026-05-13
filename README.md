@@ -1,0 +1,1 @@
+PurokConnect is a digital platform that modernizes barangay governance by integrating problem reporting, announcements, performance tracking, emergency response, and a local marketplace into one accessible system. Its core purpose is to empower residents, enhance transparency, and make barangay services faster, more responsive, and inclusive for every purok.
