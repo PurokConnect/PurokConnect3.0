@@ -1,7 +1,7 @@
 {
   "name": "PurokConnect",
   "short_name": "PurokConnect",
-  "start_url": "/PurokConnect3.0/index.html",
+  "start_url": "/PurokConnect3.0/index.html"
   "display": "standalone",
   "background_color": "#f9fafb",
   "theme_color": "#059669",
