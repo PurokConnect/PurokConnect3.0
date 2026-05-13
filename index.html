@@ -396,8 +396,8 @@
     const cardWidth = carousel.children[0].offsetWidth + 32; // adjust gap if needed
     scrollAmount += cardWidth;
 
-    // ✅ Wait until the last card is fully visible before resetting
-    if (scrollAmount > carousel.scrollWidth - carousel.clientWidth - cardWidth) {
+    // ✅ Reset only after the last card has fully appeared
+    if (scrollAmount >= (carousel.children.length * cardWidth) - carousel.clientWidth) {
       scrollAmount = 0;
     }
 
