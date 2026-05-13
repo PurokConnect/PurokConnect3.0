@@ -42,36 +42,47 @@
 </head>
 <body class="bg-gray-50 font-sans">
 
-  <!-- Navbar (original + auth buttons) -->
-  <nav class="bg-emerald-700 text-white sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <img src="logo.png" alt="PurokConnect Logo" class="h-11 w-auto">
-        <div>
-          <span class="text-3xl font-bold tracking-tighter">PurokConnect</span>
-          <p class="text-xs text-emerald-200 -mt-1">Local Voices. Digital Solutions.</p>
-        </div>
-      </div>
-      <div class="hidden md:flex gap-8 text-sm font-medium">
-        <a href="#home" class="hover:text-emerald-200 transition">Home</a>
-        <a href="#features" class="hover:text-emerald-200 transition">Features</a>
-        <a href="#report" class="hover:text-emerald-200 transition">Report Problem</a>
-        <a href="#market" class="hover:text-emerald-200 transition">Marketplace</a>
-        <a href="#emergency" class="hover:text-emerald-200 transition">Emergency</a>
-      </div>
-      <div class="flex items-center gap-2">
-        <span id="user-greeting" class="text-sm text-emerald-200 hidden"></span>
-        <button id="auth-btn" onclick="openAuthModal()"
-                class="bg-emerald-600 hover:bg-emerald-500 text-white w-11 h-11 flex items-center justify-center rounded-2xl transition shadow-sm text-2xl">
-          <i class="fa-solid fa-user"></i>
-        </button>
-        <button id="logout-btn" onclick="logout()"
-                class="hidden bg-white text-emerald-700 hover:bg-emerald-50 px-3 py-2 rounded-xl text-sm font-semibold transition">
-          Sign Out
-        </button>
+<!-- Navbar -->
+<nav class="bg-emerald-700 text-white sticky top-0 z-50 shadow-md">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    
+    <!-- Logo + Title -->
+    <div class="flex items-center gap-3">
+      <img src="logo.png" alt="PurokConnect Logo" class="h-11 w-auto">
+      <div>
+        <span class="text-3xl font-bold tracking-tighter">PurokConnect</span>
+        <p class="text-xs text-emerald-200 -mt-1">Local Voices. Digital Solutions.</p>
       </div>
     </div>
-  </nav>
+
+    <!-- Desktop Links -->
+    <div class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="#home" class="hover:text-emerald-200 transition">Home</a>
+      <a href="#features" class="hover:text-emerald-200 transition">Features</a>
+      <a href="#report" class="hover:text-emerald-200 transition">Report Problem</a>
+      <a href="#market" class="hover:text-emerald-200 transition">Marketplace</a>
+      <a href="#emergency" class="hover:text-emerald-200 transition">Emergency</a>
+    </div>
+
+    <!-- User Controls -->
+    <div class="flex items-center gap-2">
+      <!-- Greeting (shows after login) -->
+      <span id="user-greeting" class="text-sm text-emerald-200 hidden"></span>
+
+      <!-- Profile Icon (opens auth modal) -->
+      <button id="auth-btn" onclick="openAuthModal()" 
+              class="bg-emerald-600 hover:bg-emerald-500 text-white w-11 h-11 flex items-center justify-center rounded-2xl transition shadow-sm text-2xl">
+        <i class="fa-solid fa-user"></i>
+      </button>
+
+      <!-- Logout Button (hidden until logged in) -->
+      <button id="logout-btn" onclick="logout()" 
+              class="hidden bg-white text-emerald-700 hover:bg-emerald-50 px-3 py-2 rounded-xl text-sm font-semibold transition">
+        Sign Out
+      </button>
+    </div>
+  </div>
+</nav>
 
   <!-- Hero (original) -->
   <section id="home" class="hero-bg h-screen flex items-center text-white">
