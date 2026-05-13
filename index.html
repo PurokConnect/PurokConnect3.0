@@ -386,14 +386,14 @@
     document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
   }
   </script>
-  
+
   <!-- ✅ Carousel Script -->
   <script>
   const carousel = document.getElementById('carousel');
-  let speed = 0.3; // pixels per frame (adjust for pace)
+  let speed = 0.3; // pixels per frame
   let isPaused = false;
 
-  // Clone all cards once to create a seamless loop
+  // Clone cards once
   const cloneCount = carousel.children.length;
   for (let i = 0; i < cloneCount; i++) {
     const clone = carousel.children[i].cloneNode(true);
@@ -404,7 +404,7 @@
     if (!isPaused) {
       carousel.scrollLeft += speed;
 
-      // ✅ Reset invisibly when halfway through
+      // Reset invisibly at halfway point
       if (carousel.scrollLeft >= carousel.scrollWidth / 2) {
         carousel.scrollLeft = 0;
       }
@@ -418,7 +418,6 @@
   carousel.addEventListener('touchstart', () => isPaused = true);
   carousel.addEventListener('touchend', () => isPaused = false);
 
-  // Start continuous scroll
   smoothScroll();
   </script>
   
