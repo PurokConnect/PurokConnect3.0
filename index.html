@@ -390,10 +390,10 @@
   <!-- ✅ Carousel Script -->
   <script>
   const carousel = document.getElementById('carousel');
-  let speed = 0.3; // pixels per frame, adjust for pace
+  let speed = 0.3; // pixels per frame (adjust for pace)
   let isPaused = false;
 
-  // ✅ Clone all cards once to create a seamless loop
+  // Clone all cards once to create a seamless loop
   const cloneCount = carousel.children.length;
   for (let i = 0; i < cloneCount; i++) {
     const clone = carousel.children[i].cloneNode(true);
@@ -404,7 +404,7 @@
     if (!isPaused) {
       carousel.scrollLeft += speed;
 
-      // ✅ Reset only when halfway (after original set)
+      // ✅ Reset invisibly when halfway through
       if (carousel.scrollLeft >= carousel.scrollWidth / 2) {
         carousel.scrollLeft = 0;
       }
