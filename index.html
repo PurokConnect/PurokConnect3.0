@@ -390,38 +390,22 @@
   <!-- ✅ Carousel Script -->
 <script>
   const carousel = document.getElementById('carousel');
-  let scrollAmount = 0;
-  let autoScrollInterval;
 
-  function autoScroll() {
-    const cardWidth = carousel.children[0].offsetWidth + 32; // card width + gap
-    scrollAmount += cardWidth;
+  function smoothScroll() {
+    // Move by 1px each frame for slow, smooth motion
+    carousel.scrollLeft += 1;
 
-    if (scrollAmount >= carousel.scrollWidth - carousel.clientWidth) {
-      scrollAmount = 0; // reset to start
+    // ✅ Reset seamlessly when reaching the end
+    if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
+      carousel.scrollLeft = 0;
     }
 
-    carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+    // Keep looping
+    requestAnimationFrame(smoothScroll);
   }
 
-  function startAutoScroll() {
-    autoScrollInterval = setInterval(autoScroll, 3000); // every 3s
-  }
-
-  function stopAutoScroll() {
-    clearInterval(autoScrollInterval);
-  }
-
-  // Pause when hovering (desktop)
-  carousel.addEventListener('mouseenter', stopAutoScroll);
-  carousel.addEventListener('mouseleave', startAutoScroll);
-
-  // Pause when touching (mobile)
-  carousel.addEventListener('touchstart', stopAutoScroll);
-  carousel.addEventListener('touchend', startAutoScroll);
-
-  // Start auto-scroll when page loads
-  startAutoScroll();
+  // Start the smooth scroll
+  smoothScroll();
 </script>
   
   <script>
