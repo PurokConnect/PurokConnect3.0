@@ -389,32 +389,34 @@
 
   <script>
   const carousel = document.getElementById('carousel');
-  let speed = 0.2; // 🔹 adjust this for slower/faster slide
-  let direction = 1; // 1 = forward, -1 = backward
-  let isPaused = false;
+  let scrollAmount = 0;
+  let autoScrollInterval;
 
-  function smoothScroll() {
-    if (!isPaused) {
-      carousel.scrollLeft += speed * direction;
+  function autoScroll() {
+    const cardWidth = carousel.children[0].offsetWidth + 32; // adjust gap if needed
+    scrollAmount += cardWidth;
 
-      // Flip direction at edges
-      if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
-        direction = -1; // go backward
-      } else if (carousel.scrollLeft <= 0) {
-        direction = 1; // go forward again
-      }
+    if (scrollAmount >= carousel.scrollWidth - carousel.clientWidth) {
+      scrollAmount = 0;
     }
-    requestAnimationFrame(smoothScroll);
+
+    carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
   }
 
-  // Pause on hover/touch
-  carousel.addEventListener('mouseenter', () => isPaused = true);
-  carousel.addEventListener('mouseleave', () => isPaused = false);
-  carousel.addEventListener('touchstart', () => isPaused = true);
-  carousel.addEventListener('touchend', () => isPaused = false);
+  function startAutoScroll() {
+    autoScrollInterval = setInterval(autoScroll, 3000);
+  }
 
-  // Start the ping-pong slide
-  smoothScroll();
+  function stopAutoScroll() {
+    clearInterval(autoScrollInterval);
+  }
+
+  carousel.addEventListener('mouseenter', stopAutoScroll);
+  carousel.addEventListener('mouseleave', startAutoScroll);
+  carousel.addEventListener('touchstart', stopAutoScroll);
+  carousel.addEventListener('touchend', startAutoScroll);
+
+  startAutoScroll();
   </script>
   
   <script>
