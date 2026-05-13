@@ -364,6 +364,30 @@
   </div>
 
   <script>
+  // Open the authentication modal
+  function openAuthModal() {
+    document.getElementById('auth-modal').classList.add('active');
+  }
+
+  // Close the authentication modal
+  function closeAuthModal(e) {
+    const modal = document.getElementById('auth-modal');
+    // Close if no event provided OR if clicking on the overlay
+    if (!e || e.target === modal) {
+      modal.classList.remove('active');
+    }
+  }
+
+  // Switch between Login and Signup tabs
+  function switchTab(tab) {
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+    document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
+  }
+  </script>
+  
+  <script>
     // ============================================================
     // SUPABASE — replace with your credentials
     // supabase.com → your project → Settings → API
