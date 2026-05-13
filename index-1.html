@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PurokConnect | Modern Barangay Governance</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#059669">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .hero-bg {
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), 
+                  url('https://images.pexels.com/photos/13118957/pexels-photo-13118957.jpeg') center/cover no-repeat;
+    }
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .tab-btn.active { background: #059669; color: white; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar (original + auth buttons) -->
+  <nav class="bg-emerald-700 text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="PurokConnect Logo" class="h-11 w-auto">
+        <div>
+          <span class="text-3xl font-bold tracking-tighter">PurokConnect</span>
+          <p class="text-xs text-emerald-200 -mt-1">Local Voices. Digital Solutions.</p>
+        </div>
+      </div>
+      <div class="hidden md:flex gap-8 text-sm font-medium">
+        <a href="#home" class="hover:text-emerald-200 transition">Home</a>
+        <a href="#features" class="hover:text-emerald-200 transition">Features</a>
+        <a href="#report" class="hover:text-emerald-200 transition">Report Problem</a>
+        <a href="#market" class="hover:text-emerald-200 transition">Marketplace</a>
+        <a href="#emergency" class="hover:text-emerald-200 transition">Emergency</a>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="user-greeting" class="text-sm text-emerald-200 hidden"></span>
+        <button id="auth-btn" onclick="openAuthModal()"
+                class="bg-emerald-600 hover:bg-emerald-500 text-white w-11 h-11 flex items-center justify-center rounded-2xl transition shadow-sm text-2xl">
+          <i class="fa-solid fa-user"></i>
+        </button>
+        <button id="logout-btn" onclick="logout()"
+                class="hidden bg-white text-emerald-700 hover:bg-emerald-50 px-3 py-2 rounded-xl text-sm font-semibold transition">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero (original) -->
+  <section id="home" class="hero-bg h-screen flex items-center text-white">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+        Connecting Puroks.<br>Strengthening Barangay.
+      </h1>
+      <p class="text-xl md:text-2xl max-w-2xl mx-auto mb-10 text-emerald-100">
+        One platform for problem reporting, announcements, performance tracking, 
+        emergency response, and a local marketplace.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="document.getElementById('report').scrollIntoView({behavior:'smooth'})" 
+                class="bg-emerald-600 hover:bg-emerald-500 px-10 py-4 rounded-2xl text-lg font-semibold transition flex items-center justify-center gap-3">
+          <i class="fa-solid fa-bullhorn"></i> Report a Problem Now
+        </button>
+        <button onclick="document.getElementById('emergency').scrollIntoView({behavior:'smooth'})" 
+                class="border-2 border-white hover:bg-white/10 px-10 py-4 rounded-2xl text-lg font-semibold transition">
+          Call for Emergency Help
+        </button>
+      </div>
+      <p class="mt-12 text-sm text-emerald-200">Available on Mobile • Trusted by Residents • Powered by Community</p>
+    </div>
+  </section>
+
+  <!-- Features (original) -->
+  <section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Everything Your Barangay Needs</h2>
+      <p class="text-center text-gray-600 mb-16 max-w-xl mx-auto">Modern tools that make governance faster, transparent, and inclusive.</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-white border border-gray-200 rounded-3xl p-8 card-hover transition-all">
+          <div class="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-4xl mb-6">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Problem Reporting</h3>
+          <p class="text-gray-600">Report flooding, potholes, garbage issues, or safety concerns with photos and location. Track status in real time.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-3xl p-8 card-hover transition-all">
+          <div class="w-16 h-16 bg-blue-100 text-blue-700 rounded-2xl flex items-center justify-center text-4xl mb-6">
+            <i class="fa-solid fa-bullhorn"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Announcements & Updates</h3>
+          <p class="text-gray-600">Instant notices, events, weather alerts, and performance reports from barangay officials.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-3xl p-8 card-hover transition-all">
+          <div class="w-16 h-16 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-4xl mb-6">
+            <i class="fa-solid fa-store"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Local Marketplace</h3>
+          <p class="text-gray-600">Buy and sell local produce, services, and goods within your purok and barangay.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-3xl p-8 card-hover transition-all">
+          <div class="w-16 h-16 bg-red-100 text-red-700 rounded-2xl flex items-center justify-center text-4xl mb-6">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Emergency Response</h3>
+          <p class="text-gray-600">One-tap alerts for medical, fire, crime, or disaster. Officials get notified instantly with your location.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-3xl p-8 card-hover transition-all">
+          <div class="w-16 h-16 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center text-4xl mb-6">
+            <i class="fa-solid fa-chart-bar"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-3">Performance Tracking</h3>
+          <p class="text-gray-600">Real-time dashboard showing resolved issues and barangay performance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Report (original design + real fields) -->
+  <section id="report" class="py-20 bg-emerald-50">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-3xl font-bold text-center mb-10">Report a Problem</h2>
+      <div class="bg-white rounded-3xl shadow-xl p-10">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <label class="block text-sm font-medium mb-2">Issue Type</label>
+            <select id="issue-type" class="w-full p-4 border border-gray-300 rounded-2xl">
+              <option value="flooding">Flooding</option>
+              <option value="pothole">Pothole on Main Road</option>
+              <option value="streetlight">Broken Street Light</option>
+              <option value="garbage">Garbage Collection Delay</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Your Purok</label>
+            <input id="purok-location" type="text" placeholder="e.g. Purok 5, Barangay Poblacion"
+                   class="w-full p-4 border border-gray-300 rounded-2xl">
+          </div>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm font-medium mb-2">Description</label>
+          <textarea id="report-description" class="w-full h-32 p-4 border border-gray-300 rounded-3xl" 
+                    placeholder="Water is rising near the chapel..."></textarea>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm font-medium mb-2">Photo (optional)</label>
+          <div class="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-emerald-400 transition"
+               onclick="document.getElementById('photo-input').click()">
+            <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
+            <p class="text-sm text-gray-400">Click to attach a photo</p>
+            <input id="photo-input" type="file" accept="image/*" class="hidden" onchange="handlePhoto(this)">
+          </div>
+          <p id="photo-name" class="text-xs text-emerald-600 mt-2 hidden"></p>
+        </div>
+        <button onclick="submitReport()" 
+                class="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl text-lg font-semibold transition">
+          Submit Report
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marketplace (new section) -->
+  <section id="market" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-4 text-gray-800">Local Marketplace</h2>
+      <p class="text-center text-gray-600 mb-10 max-w-xl mx-auto">Buy and sell within your barangay community.</p>
+      <div class="flex justify-center mb-10">
+        <button onclick="openMarketModal()"
+                class="bg-amber-500 hover:bg-amber-600 text-white px-8 py-3 rounded-2xl font-semibold transition flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i> Post a Listing
+        </button>
+      </div>
+      <div id="listings-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="col-span-full text-center text-gray-400 py-12">
+          <i class="fa-solid fa-store text-4xl mb-3 block"></i>
+          <p>No listings yet. Be the first to post!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Emergency (new section) -->
+  <section id="emergency" class="py-20 bg-red-50">
+    <div class="max-w-2xl mx-auto px-6 text-center">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">Emergency Response</h2>
+      <p class="text-gray-500 mb-12">Tap a button to instantly alert barangay officials with your location.</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <button onclick="sendEmergency('medical')"
+                class="bg-white border-2 border-red-200 hover:border-red-500 hover:bg-red-50 rounded-2xl p-5 transition flex flex-col items-center gap-2 text-gray-700 font-semibold">
+          <i class="fa-solid fa-kit-medical text-red-500 text-2xl"></i> Medical
+        </button>
+        <button onclick="sendEmergency('fire')"
+                class="bg-white border-2 border-orange-200 hover:border-orange-500 hover:bg-orange-50 rounded-2xl p-5 transition flex flex-col items-center gap-2 text-gray-700 font-semibold">
+          <i class="fa-solid fa-fire text-orange-500 text-2xl"></i> Fire
+        </button>
+        <button onclick="sendEmergency('crime')"
+                class="bg-white border-2 border-blue-200 hover:border-blue-500 hover:bg-blue-50 rounded-2xl p-5 transition flex flex-col items-center gap-2 text-gray-700 font-semibold">
+          <i class="fa-solid fa-shield-halved text-blue-500 text-2xl"></i> Crime
+        </button>
+        <button onclick="sendEmergency('disaster')"
+                class="bg-white border-2 border-yellow-200 hover:border-yellow-500 hover:bg-yellow-50 rounded-2xl p-5 transition flex flex-col items-center gap-2 text-gray-700 font-semibold">
+          <i class="fa-solid fa-house-flood-water text-yellow-500 text-2xl"></i> Disaster
+        </button>
+      </div>
+      <button onclick="sendEmergency('general')"
+              class="bg-red-600 hover:bg-red-700 text-white w-40 h-40 rounded-full text-lg font-bold transition shadow-2xl flex flex-col items-center justify-center gap-2 mx-auto">
+        <i class="fa-solid fa-bell text-3xl"></i>
+        <span>SOS</span>
+        <span class="text-xs font-normal opacity-80">Tap for help</span>
+      </button>
+      <p class="mt-8 text-sm text-gray-400">Your location will be shared with barangay officials automatically.</p>
+    </div>
+  </section>
+
+  <!-- Footer (original) -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <div class="flex justify-center gap-3 mb-6">
+        <img src="logo.png" alt="PurokConnect Logo" class="h-12">
+      </div>
+      <p class="text-gray-400">Modernizing barangay governance • Empowering every purok in the Philippines</p>
+      <p class="text-xs text-gray-500 mt-8">PurokConnect</p>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal" class="modal-overlay" onclick="closeAuthModal(event)">
+    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-800">Welcome</h3>
+        <button onclick="closeAuthModal()" class="text-gray-400 hover:text-gray-600 text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="flex bg-gray-100 rounded-2xl p-1 mb-6">
+        <button id="tab-login" class="tab-btn active flex-1 py-2.5 rounded-xl text-sm font-semibold transition" onclick="switchTab('login')">Sign In</button>
+        <button id="tab-signup" class="tab-btn flex-1 py-2.5 rounded-xl text-sm font-semibold transition" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+      <div id="login-form">
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+          <input id="login-email" type="email" placeholder="you@example.com"
+                 class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+          <input id="login-password" type="password" placeholder="••••••••"
+                 class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <button onclick="login()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-semibold transition">Sign In</button>
+      </div>
+      <div id="signup-form" class="hidden">
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+          <input id="signup-name" type="text" placeholder="Juan dela Cruz"
+                 class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+          <input id="signup-email" type="email" placeholder="you@example.com"
+                 class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Purok & Barangay</label>
+          <input id="signup-purok" type="text" placeholder="Purok 3, Barangay Poblacion"
+                 class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+          <input id="signup-password" type="password" placeholder="••••••••"
+                 class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+        </div>
+        <button onclick="signup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-semibold transition">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKETPLACE MODAL -->
+  <div id="market-modal" class="modal-overlay" onclick="closeMarketModal(event)">
+    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-gray-800">Post a Listing</h3>
+        <button onclick="closeMarketModal()" class="text-gray-400 hover:text-gray-600 text-xl">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Item / Service Name</label>
+        <input id="market-name" type="text" placeholder="e.g. Fresh Vegetables, Plumbing Service"
+               class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (₱)</label>
+        <input id="market-price" type="number" placeholder="0.00"
+               class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
+      </div>
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+        <textarea id="market-desc" rows="3" placeholder="Describe what you're selling..."
+                  class="w-full p-3.5 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
+      </div>
+      <button onclick="postListing()" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-semibold transition">Post Listing</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+  <script>
+    // ============================================================
+    // SUPABASE — replace with your credentials
+    // supabase.com → your project → Settings → API
+    // ============================================================
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+
+    async function checkSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) { currentUser = session.user; updateAuthUI(session.user); loadListings(); }
+    }
+
+    function updateAuthUI(user) {
+      document.getElementById('auth-btn').classList.add('hidden');
+      document.getElementById('logout-btn').classList.remove('hidden');
+      const g = document.getElementById('user-greeting');
+      g.textContent = user.email.split('@')[0];
+      g.classList.remove('hidden');
+    }
+
+    async function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return showToast(error.message, 'error');
+      currentUser = data.user;
+      updateAuthUI(data.user);
+      closeAuthModal();
+      showToast('Welcome back!', 'success');
+      loadListings();
+    }
+
+    async function signup() {
+      const { error } = await supabase.auth.signUp({
+        email: document.getElementById('signup-email').value,
+        password: document.getElementById('signup-password').value,
+        options: { data: {
+          full_name: document.getElementById('signup-name').value,
+          purok: document.getElementById('signup-purok').value
+        }}
+      });
+      if (error) return showToast(error.message, 'error');
+      showToast('Account created! Check your email to verify.', 'success');
+      closeAuthModal();
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      currentUser = null;
+      document.getElementById('auth-btn').classList.remove('hidden');
+      document.getElementById('logout-btn').classList.add('hidden');
+      document.getElementById('user-greeting').classList.add('hidden');
+      showToast('Signed out.', 'success');
+    }
+
+    let photoFile = null;
+    function handlePhoto(input) {
+      if (input.files[0]) {
+        photoFile = input.files[0];
+        const n = document.getElementById('photo-name');
+        n.textContent = '📎 ' + photoFile.name;
+        n.classList.remove('hidden');
+      }
+    }
+
+    async function submitReport() {
+      if (!currentUser) { openAuthModal(); return showToast('Please sign in first.', 'error'); }
+      const location = document.getElementById('purok-location').value;
+      const description = document.getElementById('report-description').value;
+      if (!location || !description) return showToast('Please fill in all fields.', 'error');
+      let photoUrl = null;
+      if (photoFile) {
+        const fileName = `${Date.now()}-${photoFile.name}`;
+        const { error: ue } = await supabase.storage.from('report-photos').upload(fileName, photoFile);
+        if (!ue) photoUrl = supabase.storage.from('report-photos').getPublicUrl(fileName).data.publicUrl;
+      }
+      const { error } = await supabase.from('reports').insert({
+        user_id: currentUser.id,
+        issue_type: document.getElementById('issue-type').value,
+        location, description, photo_url: photoUrl, status: 'pending'
+      });
+      if (error) return showToast('Failed to submit. Try again.', 'error');
+      document.getElementById('purok-location').value = '';
+      document.getElementById('report-description').value = '';
+      document.getElementById('photo-name').classList.add('hidden');
+      photoFile = null;
+      showToast('Report submitted! Officials have been notified.', 'success');
+    }
+
+    function sendEmergency(type) {
+      if (!currentUser) { openAuthModal(); return showToast('Please sign in first.', 'error'); }
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords: { latitude, longitude } }) => {
+          const { error } = await supabase.from('emergencies').insert({
+            user_id: currentUser.id, type, latitude, longitude, status: 'active'
+          });
+          if (error) return showToast('Alert failed. Call 911 directly.', 'error');
+          showToast(`🚨 ${type.toUpperCase()} alert sent! Officials notified.`, 'success');
+        },
+        async () => {
+          await supabase.from('emergencies').insert({ user_id: currentUser.id, type, status: 'active' });
+          showToast('Alert sent! (Location unavailable)', 'success');
+        }
+      );
+    }
+
+    async function loadListings() {
+      const { data } = await supabase.from('listings').select('*').order('created_at', { ascending: false }).limit(6);
+      if (!data?.length) return;
+      document.getElementById('listings-grid').innerHTML = data.map(item => `
+        <div class="bg-white border border-gray-200 rounded-3xl p-6 card-hover transition-all shadow-sm">
+          <div class="flex justify-between items-start mb-3">
+            <h4 class="font-bold text-gray-800">${item.name}</h4>
+            <span class="bg-amber-100 text-amber-700 text-sm font-semibold px-3 py-1 rounded-full">₱${Number(item.price).toLocaleString()}</span>
+          </div>
+          <p class="text-gray-500 text-sm">${item.description}</p>
+        </div>`).join('');
+    }
+
+    async function postListing() {
+      if (!currentUser) { closeMarketModal(); openAuthModal(); return showToast('Please sign in first.', 'error'); }
+      const name = document.getElementById('market-name').value;
+      const price = document.getElementById('market-price').value;
+      if (!name || !price) return showToast('Please fill in name and price.', 'error');
+      const { error } = await supabase.from('listings').insert({
+        user_id: currentUser.id, name, price,
+        description: document.getElementById('market-desc').value
+      });
+      if (error) return showToast('Failed to post listing.', 'error');
+      closeMarketModal();
+      showToast('Listing posted!', 'success');
+      loadListings();
+    }
+
+    function openAuthModal() { document.getElementById('auth-modal').classList.add('active'); }
+    function closeAuthModal(e) {
+      if (!e || e.target === document.getElementById('auth-modal'))
+        document.getElementById('auth-modal').classList.remove('active');
+    }
+    function openMarketModal() { document.getElementById('market-modal').classList.add('active'); }
+    function closeMarketModal(e) {
+      if (!e || e.target === document.getElementById('market-modal'))
+        document.getElementById('market-modal').classList.remove('active');
+    }
+    function switchTab(tab) {
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+      document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
+    }
+    function showToast(msg, type = 'success') {
+      document.getElementById('toast-icon').className = type === 'success'
+        ? 'fa-solid fa-circle-check text-emerald-400 text-xl'
+        : 'fa-solid fa-circle-exclamation text-red-400 text-xl';
+      document.getElementById('toast-msg').textContent = msg;
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    if ('serviceWorker' in navigator)
+      navigator.serviceWorker.register('/PurokConnect-v3/service-worker.js').catch(() => {});
+
+    checkSession();
+    loadListings();
+  </script>
+</body>
+</html>
