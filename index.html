@@ -386,26 +386,22 @@
     document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
   }
   </script>
-  
+
   <script>
   const carousel = document.getElementById('carousel');
-  let speed = 0.3; // pixels per frame
+  let speed = 0.2; // 🔹 adjust this for slower/faster slide
+  let direction = 1; // 1 = forward, -1 = backward
   let isPaused = false;
-
-  // Clone all cards once to create seamless loop
-  const cloneCount = carousel.children.length;
-  for (let i = 0; i < cloneCount; i++) {
-    const clone = carousel.children[i].cloneNode(true);
-    carousel.appendChild(clone);
-  }
 
   function smoothScroll() {
     if (!isPaused) {
-      carousel.scrollLeft += speed;
+      carousel.scrollLeft += speed * direction;
 
-      // ✅ Reset invisibly at halfway point
-      if (carousel.scrollLeft >= carousel.scrollWidth / 2) {
-        carousel.scrollLeft = 0;
+      // Flip direction at edges
+      if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
+        direction = -1; // go backward
+      } else if (carousel.scrollLeft <= 0) {
+        direction = 1; // go forward again
       }
     }
     requestAnimationFrame(smoothScroll);
@@ -417,7 +413,7 @@
   carousel.addEventListener('touchstart', () => isPaused = true);
   carousel.addEventListener('touchend', () => isPaused = false);
 
-  // Start continuous scroll
+  // Start the ping-pong slide
   smoothScroll();
   </script>
   
