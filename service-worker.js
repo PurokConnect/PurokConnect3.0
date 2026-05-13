@@ -1,9 +1,9 @@
 const CACHE_NAME = 'purokconnect-v1';
 const urlsToCache = [
-  '/PurokConnect-v3/',
-  '/PurokConnect-v3/index.html',
-  '/PurokConnect-v3/logo.png',
-  '/PurokConnect-v3/manifest.json'
+  '/PurokConnect3.0/',
+  '/PurokConnect3.0/index.html',
+  '/PurokConnect3.0/logo.png',
+  '/PurokConnect3.0/manifest.json'
 ];
 
 self.addEventListener('install', event => {
