@@ -183,7 +183,7 @@
       <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
         <h3 class="text-xl font-semibold mb-2 text-blue-700">Community Clean-Up</h3>
         <p class="text-gray-600 mb-4">
-          Join us this Saturday at 8 AM for a barangay-wide clean-up drive.
+          Join us this next Monday at 8 AM for a barangay-wide clean-up drive.
         </p>
         <span class="text-sm text-gray-500">Posted: May 12, 2026</span>
       </div>
@@ -199,9 +199,9 @@
       <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
         <h3 class="text-xl font-semibold mb-2 text-red-700">Weather Alert</h3>
         <p class="text-gray-600 mb-4">
-          Heavy rains expected tomorrow. Please secure belongings and stay safe.
+          Heavy rains expected this Saturday. Please secure belongings and stay safe.
         </p>
-        <span class="text-sm text-gray-500">Posted: May 9, 2026</span>
+        <span class="text-sm text-gray-500">Posted: May 11, 2026</span>
       </div>
     </div>
   </div>
@@ -428,6 +428,14 @@
     document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
   }
   </script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/PurokConnect3.0/service-worker.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.error('SW registration failed:', err));
+  }
+</script>
 
   <script>
   const carousel = document.getElementById('carousel');
