@@ -428,14 +428,6 @@
     document.getElementById('signup-form').classList.toggle('hidden', tab !== 'signup');
   }
   </script>
-  
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/PurokConnect3.0/service-worker.js')
-      .then(() => console.log('Service Worker registered'))
-      .catch(err => console.error('SW registration failed:', err));
-  }
-</script>
 
   <script>
   const carousel = document.getElementById('carousel');
@@ -639,6 +631,14 @@
 
     checkSession();
     loadListings();
+  </script>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/PurokConnect3.0/service-worker.js')
+      .then(() => console.log('SW registered'))
+      .catch(err => console.log('SW error:', err));
+  }
   </script>
 </body>
 </html>
