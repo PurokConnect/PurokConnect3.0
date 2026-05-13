@@ -6,14 +6,12 @@ const urlsToCache = [
   '/PurokConnect3.0/manifest.json'
 ];
 
-// Install event: cache files
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// Activate event: clean old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -22,7 +20,6 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event: serve cached files first
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => response || fetch(event.request))
