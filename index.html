@@ -388,25 +388,33 @@
   </script>
   
   <!-- ✅ Carousel Script -->
-<script>
+  <script>
   const carousel = document.getElementById('carousel');
+  let speed = 0.3; // pixels per frame — adjust for desired pace
+  let isPaused = false;
 
   function smoothScroll() {
-    // Move by 1px each frame for slow, smooth motion
-    carousel.scrollLeft += 1;
+    if (!isPaused) {
+      carousel.scrollLeft += speed;
 
-    // ✅ Reset seamlessly when reaching the end
-    if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
-      carousel.scrollLeft = 0;
+      // Seamless reset when reaching the end
+      if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth) {
+        carousel.scrollLeft = 0;
+      }
     }
 
-    // Keep looping
     requestAnimationFrame(smoothScroll);
   }
 
+  // Pause on hover/touch
+  carousel.addEventListener('mouseenter', () => isPaused = true);
+  carousel.addEventListener('mouseleave', () => isPaused = false);
+  carousel.addEventListener('touchstart', () => isPaused = true);
+  carousel.addEventListener('touchend', () => isPaused = false);
+
   // Start the smooth scroll
   smoothScroll();
-</script>
+  </script>
   
   <script>
     // ============================================================
