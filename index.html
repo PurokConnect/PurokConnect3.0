@@ -372,32 +372,50 @@
   </div>
 
   <!-- MARKETPLACE MODAL -->
-  <div id="market-modal" class="modal-overlay" onclick="closeMarketModal(event)">
-    <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4" onclick="event.stopPropagation()">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-2xl font-bold text-gray-800">Post a Listing</h3>
-        <button onclick="closeMarketModal()" class="text-gray-400 hover:text-gray-600 text-xl">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Item / Service Name</label>
-        <input id="market-name" type="text" placeholder="e.g. Fresh Vegetables, Plumbing Service"
-               class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Price (₱)</label>
-        <input id="market-price" type="number" placeholder="0.00"
-               class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-400">
-      </div>
-      <div class="mb-6">
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-        <textarea id="market-desc" rows="3" placeholder="Describe what you're selling..."
-                  class="w-full p-3.5 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-emerald-400"></textarea>
-      </div>
-      <button onclick="postListing()" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-semibold transition">Post Listing</button>
+<div id="market-modal" class="modal-overlay" onclick="closeMarketModal(event)">
+  <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md mx-4" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold text-gray-800">Post a Listing</h3>
+      <button onclick="closeMarketModal()" class="text-gray-400 hover:text-gray-600 text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+      <select id="market-category" class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <option value="Food & Produce">🥦 Food & Produce</option>
+        <option value="Goods & Products">📦 Goods & Products</option>
+        <option value="Services">🔧 Services</option>
+        <option value="For Rent">🏠 For Rent</option>
+        <option value="Other">📋 Other</option>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Item / Service Name</label>
+      <input id="market-name" type="text" placeholder="e.g. Fresh Vegetables, Plumbing Service"
+             class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-400">
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Price (₱)</label>
+      <input id="market-price" type="number" placeholder="0.00"
+             class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-400">
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Contact Number</label>
+      <input id="market-contact" type="tel" placeholder="e.g. 09123456789"
+             class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-400">
+    </div>
+    <div class="mb-6">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+      <textarea id="market-desc" rows="3" placeholder="Describe what you're selling..."
+                class="w-full p-3.5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"></textarea>
+    </div>
+    <button onclick="postListing()"
+            class="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl text-lg font-semibold transition">
+      Post Listing
+    </button>
   </div>
+</div>
 
   <!-- TOAST -->
   <div id="toast" class="toast bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm">
@@ -606,6 +624,9 @@
         document.getElementById('auth-modal').classList.remove('active');
     }
     function openMarketModal() { document.getElementById('market-modal').classList.add('active'); }
+    function openMarketModal() {
+  document.getElementById('market-modal').classList.add('active');
+    }
     function closeMarketModal(e) {
       if (!e || e.target === document.getElementById('market-modal'))
         document.getElementById('market-modal').classList.remove('active');
